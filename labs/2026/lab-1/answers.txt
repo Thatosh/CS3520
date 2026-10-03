@@ -1,0 +1,71 @@
+CS3520 — Computer Organisation and Architecture I
+
+LAB 1 ANSWERS
+
+STEP 4 — Completed Table
+
+| Instruction      | Format | Opcode    | Funct3 / Funct7 | Registers / Immediate          | Hex          |
+| ---------------- | ------ | --------- | --------------- | ------------------------------ | ------------ |
+| `add t4, t1, t2` | R-type | `0110011` | `000 / 0000000` | rd = x29, rs1 = x6, rs2 = x7   | `0x00730EB3` |
+| `slli t4, t4, 3` | I-type | `0010011` | `001 / 0000000` | rd = x29, rs1 = x29, shamt = 3 | `0x003E9E93` |
+| `lw t1, 0(t0)`   | I-type | `0000011` | `010 / —`       | rd = x6, rs1 = x5, imm = 0     | `0x0002A303` |
+
+Verification: All three hexadecimal values were checked against Ripes and matched the expected encodings.
+
+---
+
+STEP 5 — Decoded Instructions
+
+1. `0x00A00293`
+
+```text
+addi t0, zero, 10
+```
+
+* Format: I-type
+* Opcode: `0010011`
+* Funct3: `000`
+* rd = x5
+* rs1 = x0
+* Immediate = 10
+
+2. `0x406283B3`
+
+```text
+sub t2, t0, t1
+```
+
+* Format: R-type
+* Opcode: `0110011`
+* Funct3: `000`
+* Funct7: `0100000`
+* rd = x7
+* rs1 = x5
+* rs2 = x6
+
+3. `0x00329293`
+
+```text
+slli t0, t0, 3
+```
+
+* Format: I-type
+* Opcode: `0010011`
+* Funct3: `001`
+* rd = x5
+* rs1 = x5
+* Shift amount (shamt) = 3
+
+---
+
+STEP 6 — Explanation of `hello-world.s`
+
+The `.data` section is used to declare and initialize data in memory, such as the string `"Hello world!"`. The `.asciz` directive stores the string followed by a null (`0`) byte, which marks the end of the string.
+
+The `la` instruction loads the memory address of the `hello` string into register `a0`. This allows the system call to know where the string is stored in memory.
+
+The `a7` register contains the environment-call number that tells the simulator which operation should be performed.
+
+The `a7` register is loaded twice with different values because the program makes two different system calls. First, `a7 = 4` requests the string-printing operation, which prints the string whose address is stored in `a0`. Later, `a7 = 10` requests the program-exit operation.
+
+Each `ecall` uses the value currently stored in `a7`, so the register must be changed between the two calls.
